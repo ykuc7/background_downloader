@@ -59,14 +59,10 @@ public class BDPlugin: NSObject, FlutterPlugin, UNUserNotificationCenterDelegate
         registrar.addMethodCallDelegate(instance, channel: channel)
         let callbackChannel = FlutterMethodChannel(name: "com.bbflight.background_downloader.callbacks", binaryMessenger: registrar.messenger())
         registrar.addApplicationDelegate(instance)
-        if (backgroundChannel == nil) {
-            // This nil check fixes dead locking when used from multiple isolates
-            // by only tracking the primary isolate. This should in theory always
-            // be the Flutter main isolate.
-            // For full feature parity with Android see #382
-            backgroundChannel = FlutterMethodChannel(name: "com.bbflight.background_downloader.background", binaryMessenger: registrar.messenger())
-            BDPlugin.callbackChannel = callbackChannel
-        }
+
+        backgroundChannel = FlutterMethodChannel(name: "com.bbflight.background_downloader.background", binaryMessenger: registrar.messenger())
+        BDPlugin.callbackChannel = callbackChannel
+        
         requireWiFi = RequireWiFi(rawValue: UserDefaults.standard.integer(forKey: BDPlugin.keyRequireWiFi))!
     }
     
